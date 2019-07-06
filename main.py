@@ -26,24 +26,25 @@ while True:
 	infrared = sensors_dict['infrared']
 	servo = sensors_dict['servo']
 	if infrared == 1:
+		sensor_ref.update({'infrared': 1})
+		sensor_ref.update({'servo': 1})
 		print("Infrared Activated")
+		sleep(2)
 		if (IO.input(PIN_IR) == False) :
-			sleep(3)
 			print("Object Detected")
 			sensor_ref.update({'confirm': 1})
+			sleep(3)
 			if servo == 1:
 				print("Locker is Open")
 				PIN_SERVO.max()
 				sleep(10)
 				PIN_SERVO.min()
 				sensor_ref.update({'confirm': 0})
+				sensor_ref.update({'infrared': 0})
+				sensor_ref.update({'servo': 0})
 				print("Locker is Locked")
 
 		else:
 			print("No Object Detected")
 			print("Waiting 3 Second to Detect the Setting")
 			sleep(3)
-	else:
-		print("Infra Wasnt Activated")
-		print("Waiting 5 Second to Reload the Setting")
-		sleep(5)
