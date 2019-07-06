@@ -1,10 +1,10 @@
 import RPi.GPIO as IO
 import time
-from firebase import firebase
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 from gpiozero import Servo
 from time import sleep
-
-fire = firebase.FirebaseApplication('https://smartlock-01.firebaseio.com/',None)
 
 PIN_IR = 25
 PIN_SERVO = Servo(14)
@@ -14,19 +14,25 @@ IO.setup(PIN_IR, IO.IN)
 
 
 while True:
-	infrared=fire.get('/infra',None)
-	servo2=fire.get('/servo2',None)
+    sensor_ref = collection.document(u'sensor')
+    sensors = sensor_ref.get()
+    sensors_string_dict = '{}'.format(sensors.to_dict())
+    sensors_dict = ast.literal_eval(sensors_string_dict)
+    confirm = sensors_dict['confirm']
+    infrared = sensors_dict['infrared']
+    servo = sensors_dict['servo']
 	if infrared == 1:
 		print("Infrared Activated")
 		if (IO.input(PIN_IR) == False) :
 			sleep(3)
 			print("Object Detected")
-			if servo2 == 0 :
-				print("Locker is Locked")
-				PIN_SERVO.min()
-			elif servo2 == 1:
+            sensor_ref.update({'confirm': 1})
+			if servo == 1:
 				print("Locker is Open")
 				PIN_SERVO.max()
+                sleep(60)
+                PIN_SERVO.min()
+                sensor_ref.update({'confirm': 0})
 			else :
 				print("Enter a Valid Command")
 		else:
