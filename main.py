@@ -26,7 +26,7 @@ while True:
 	infrared = sensors_dict['infrared']
 	servo = sensors_dict['servo']
 	if infrared == 1:
-		sensor_ref.update({'infrared': 1})
+		#sensor_ref.update({'infrared': 1})
 		#sensor_ref.update({'servo': 1})
 		print("Infrared Activated")
 		sleep(2)
