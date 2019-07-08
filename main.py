@@ -27,7 +27,7 @@ while True:
 	servo = sensors_dict['servo']
 	if infrared == 1:
 		sensor_ref.update({'infrared': 1})
-		sensor_ref.update({'servo': 1})
+		#sensor_ref.update({'servo': 1})
 		print("Infrared Activated")
 		sleep(2)
 		if (IO.input(PIN_IR) == False) :
