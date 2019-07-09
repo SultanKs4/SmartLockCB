@@ -111,7 +111,7 @@ def unlock(bot, update):
         if infrared == 0:
             sensor_ref.update({'infrared': 1})
             url = get_url()
-            bot.send_photo(chat_id=chat_id, photo=url, caption='*Place your finger at place*', parse_mode=parse_md)
+            bot.send_photo(chat_id=chat_id, photo=url, caption='*Place your finger at red circle*', parse_mode=parse_md)
             retry = 1
             while retry < 6:
                 sleep(2)
@@ -133,7 +133,9 @@ def unlock(bot, update):
                 update.message.reply_text(x + ' *Confirmation Failed*\nPlease try again', parse_mode=parse_md)
                 sensor_ref.update({'infrared': 0})
             else:
-                update.message.reply_text(unlocked + ' *Locker Unlocked*', parse_mode=parse_md)
+                update.message.reply_text(unlocked + ' *Locker Unlocked*\n' + warning +
+                                          ' The lock will automatically locked approximately in *10 Seconds*'
+                                          , parse_mode=parse_md)
                 log_ref.set({
                     'name': name,
                     'date': '{}'.format(update.message.date),
