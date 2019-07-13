@@ -11,9 +11,29 @@ from time import sleep
 # Firebase
 collection = firebase_cred.smart_lock_col
 
+servo = None
+infrared = None
+confirm = None
+user_ref = None
+log_dict = None
+sensor_ref = None
+log_ref = None
+user_id = None
+wave = None
+pin = None
+people = None
+lock = None
+unlocked = None
+no_entry_sign = None
+warning = None
+mag = None
+check = None
+x = None
+id_emoji = None
+date_emoji = None
+
 
 def get_data():
-    global servo, infrared, confirm, user_ref, log_dict, sensor_ref, log_ref, user_id
     # Sensor
     sensor_ref = collection.document(u'sensor')
     sensors = sensor_ref.get()
@@ -58,12 +78,12 @@ def log_info(name, chat_id, username, text):
     chat_id = chat_id
     username = username
     text = text
-    logging.info('%s hit by: %s - full name: %s - username: %s', text, chat_id, name, username)
+    logging.info('%s hit by: %s - full name: %s - username: %s',
+                 text, chat_id, name, username)
 
 
 # Emoji
 def get_emoji():
-    global wave, pin, people, lock, unlocked, no_entry_sign, warning, mag, check, x, id_emoji, date_emoji
     wave = list_emoji.wave
     pin = list_emoji.pin
     people = list_emoji.people
@@ -89,13 +109,15 @@ def status(bot, update):
     username = update.message.from_user.username
     text = update.message.text
     if str(chat_id) not in user_id:
-        update.message.reply_text(no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
+        update.message.reply_text(
+            no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
     else:
         if infrared == 0:
             status1 = lock + ' Locked'
         else:
             status1 = unlocked + ' Unlocked'
-        update.message.reply_text('*Locker status*: ' + status1, parse_mode=parse_md)
+        update.message.reply_text(
+            '*Locker status*: ' + status1, parse_mode=parse_md)
     log_info(name, chat_id, username, text)
 
 
@@ -106,18 +128,21 @@ def unlock(bot, update):
     username = update.message.from_user.username
     text = update.message.text
     if str(chat_id) not in user_id:
-        update.message.reply_text(no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
+        update.message.reply_text(
+            no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
     else:
         if infrared == 0:
             sensor_ref.update({'infrared': 1})
             url = get_url()
-            bot.send_photo(chat_id=chat_id, photo=url, caption='*Place your finger at red circle*', parse_mode=parse_md)
+            bot.send_photo(chat_id=chat_id, photo=url,
+                           caption='*Place your finger at red circle*', parse_mode=parse_md)
             retry = 1
             while retry < 6:
                 sleep(2)
                 get_data()
                 if confirm == 1:
-                    update.message.reply_text(check + ' *Confirmed*\nUnlocking...', parse_mode=parse_md)
+                    update.message.reply_text(
+                        check + ' *Confirmed*\nUnlocking...', parse_mode=parse_md)
                     sensor_ref.update({'servo': 1})
                     sleep(2)
                     break
@@ -130,12 +155,12 @@ def unlock(bot, update):
                 retry += 1
                 sleep(3)
             if retry >= 6 and confirm == 0:
-                update.message.reply_text(x + ' *Confirmation Failed*\nPlease try again', parse_mode=parse_md)
+                update.message.reply_text(
+                    x + ' *Confirmation Failed*\nPlease try again', parse_mode=parse_md)
                 sensor_ref.update({'infrared': 0})
             else:
                 update.message.reply_text(unlocked + ' *Locker Unlocked*\n' + warning +
-                                          ' The lock will automatically locked approximately in *10 Seconds*'
-                                          , parse_mode=parse_md)
+                                          ' The lock will automatically locked approximately in *10 Seconds*', parse_mode=parse_md)
                 log_ref.set({
                     'name': name,
                     'date': '{}'.format(update.message.date),
@@ -143,7 +168,8 @@ def unlock(bot, update):
                     'username': username
                 })
         else:
-            update.message.reply_text(check + ' Already unlocked', parse_mode=parse_md)
+            update.message.reply_text(
+                check + ' Already unlocked', parse_mode=parse_md)
     log_info(name, chat_id, username, text)
 
 
@@ -154,7 +180,8 @@ def log(bot, update):
     username = update.message.from_user.username
     text = update.message.text
     if str(chat_id) not in user_id:
-        update.message.reply_text(no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
+        update.message.reply_text(
+            no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
     else:
         get_data()
         log_id = log_dict['chat_id']
@@ -162,7 +189,8 @@ def log(bot, update):
         log_name = log_dict['name']
         log_username = log_dict['username']
         update.message.reply_text('*Log Locker*\nUser who last unlock locker is:\n\n' + id_emoji + ' *User ID*: ' +
-                                  str(log_id) + '\n' + people + ' *Name*: ' + log_name + '\n' + people + ' *Username*: '
+                                  str(log_id) + '\n' + people + ' *Name*: ' +
+                                  log_name + '\n' + people + ' *Username*: '
                                   + log_username + '\n' + date_emoji + ' *Date Unlock*: ' + log_date,
                                   parse_mode=parse_md)
     log_info(name, chat_id, username, text)
@@ -217,7 +245,8 @@ def info(bot, update):
     about_me = '*Info about me:*\n' + pin + ' Based on Python programming language\n' + pin + \
                ' Only for educational purpose only\n' + pin + ' Source code available on ' \
                '[github](https://github.com/SultanKs4/SmartLockCB)'
-    update.message.reply_text(header_text + member + about_me, parse_mode=parse_md, disable_web_page_preview=True)
+    update.message.reply_text(header_text + member + about_me,
+                              parse_mode=parse_md, disable_web_page_preview=True)
     log_info(name, chat_id, username, text)
 
 
