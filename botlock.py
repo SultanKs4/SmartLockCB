@@ -11,6 +11,7 @@ from time import sleep
 # Firebase
 collection = firebase_cred.smart_lock_col
 
+# Var Global
 servo = None
 infrared = None
 confirm = None
@@ -19,21 +20,22 @@ log_dict = None
 sensor_ref = None
 log_ref = None
 user_id = None
-wave = None
-pin = None
-people = None
-lock = None
-unlocked = None
-no_entry_sign = None
-warning = None
-mag = None
-check = None
-x = None
-id_emoji = None
-date_emoji = None
+wave = "abc"
+pin = "abc"
+people = "abc"
+lock = "abc"
+unlocked = "abc"
+no_entry_sign = "abc"
+warning = "abc"
+mag = "abc"
+check = "abc"
+x = "abc"
+id_emoji = "abc"
+date_emoji = "abc"
 
 
 def get_data():
+    global servo, infrared, confirm, user_ref, log_dict, sensor_ref, log_ref, user_id
     # Sensor
     sensor_ref = collection.document(u'sensor')
     sensors = sensor_ref.get()
@@ -84,6 +86,7 @@ def log_info(name, chat_id, username, text):
 
 # Emoji
 def get_emoji():
+    global wave, pin, people, lock, unlocked, no_entry_sign, warning, mag, check, x, id_emoji, date_emoji
     wave = list_emoji.wave
     pin = list_emoji.pin
     people = list_emoji.people
@@ -243,7 +246,7 @@ def info(bot, update):
              ' Hafid Sajid - @hafidhsajid\n' + people + ' Nurmayanti Ratna Mustika - \n' + people + \
              ' Sultan Achmad Qum Masykuro NS - @SultanKs4\n\n'
     about_me = '*Info about me:*\n' + pin + ' Based on Python programming language\n' + pin + \
-               ' Only for educational purpose only\n' + pin + ' Source code available on ' \
+               ' Only for educational purpose\n' + pin + ' Source code available on ' \
                '[github](https://github.com/SultanKs4/SmartLockCB)'
     update.message.reply_text(header_text + member + about_me,
                               parse_mode=parse_md, disable_web_page_preview=True)
