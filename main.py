@@ -49,3 +49,4 @@ while True:
 							'servo': 0})
 		PIN_SERVO.min()
 		print("Locker is Locked")
+		sensor_ref.update({u'command' == u'locked'})
