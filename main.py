@@ -45,8 +45,7 @@ while True:
 			print("Waiting 3 Second to Detect the Setting")
 			sleep(3)
 	elif command == "lock":
-		sensor_ref.update({'confirm': 0,
-							'servo': 0})
+		sensor_ref.update({'confirm': 0,'servo': 0})
 		PIN_SERVO.min()
 		print("Locker is Locked")
 		sensor_ref.update({u'command' : u'locked'})
