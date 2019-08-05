@@ -25,6 +25,7 @@ while True:
 	confirm = sensors_dict['confirm']
 	infrared = sensors_dict['infrared']
 	servo = sensors_dict['servo']
+	command = sensors_dict['command']
 	if infrared == 1:
 		#sensor_ref.update({'infrared': 1})
 		#sensor_ref.update({'servo': 1})
@@ -37,14 +38,14 @@ while True:
 			if servo == 1:
 				print("Locker is Open")
 				PIN_SERVO.max()
-				sleep(10)
-				PIN_SERVO.min()
-				sensor_ref.update({'confirm': 0})
 				sensor_ref.update({'infrared': 0})
-				sensor_ref.update({'servo': 0})
-				print("Locker is Locked")
-
+				sleep(10)
 		else:
 			print("No Object Detected")
 			print("Waiting 3 Second to Detect the Setting")
 			sleep(3)
+	elif command == "lock"
+		sensor_ref.update({'confirm': 0,
+							'servo': 0})
+		PIN_SERVO.min()
+		print("Locker is Locked")
