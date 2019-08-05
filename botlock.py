@@ -20,6 +20,7 @@ log_dict = None
 sensor_ref = None
 log_ref = None
 user_id = None
+command = "abc"
 wave = "abc"
 pin = "abc"
 people = "abc"
@@ -35,7 +36,7 @@ date_emoji = "abc"
 
 
 def get_data():
-    global servo, infrared, confirm, user_ref, log_dict, sensor_ref, log_ref, user_id
+    global servo, infrared, confirm, user_ref, log_dict, sensor_ref, log_ref, user_id, command
     # Sensor
     sensor_ref = collection.document(u'sensor')
     sensors = sensor_ref.get()
@@ -44,6 +45,7 @@ def get_data():
     confirm = sensors_dict['confirm']
     infrared = sensors_dict['infrared']
     servo = sensors_dict['servo']
+    command = sensors_dict['command']
 
     # Log
     log_ref = collection.document(u'log')
@@ -136,6 +138,9 @@ def lock(bot, update):
         if confirm == 1 and servo == 1:
             sensor_ref.update({u'command': u'lock'})
             update.message.reply_text(check + 'Locking...', parse_mode=parse_md)
+            sleep(2)
+            if command == "locked":
+                update.message.reply_text(lock_emoji + 'Locked', parse_mode=parse_md)
         else:
             update.message.reply_text(check + ' Already locked', parse_mode=parse_md)
     log_info(name, chat_id, username, text)
