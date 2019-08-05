@@ -124,6 +124,23 @@ def status(bot, update):
     log_info(name, chat_id, username, text)
 
 
+def lock(bot, update):
+    get_data()
+    name = update.message.from_user.full_name
+    chat_id = update.message.chat_id
+    username = update.message.from_user.username
+    text = update.message.text
+    if str(chat_id) not in user_id:
+        update.message.reply_text(no_entry_sign + ' *Only allowed user can use this features*', parse_mode=parse_md)
+    else:
+        if confirm == 1 and servo == 1:
+            sensor_ref.update({u'command': u'lock'})
+            update.message.reply_text(check + 'Locking...', parse_mode=parse_md)
+        else:
+            update.message.reply_text(check + ' Already locked', parse_mode=parse_md)
+    log_info(name, chat_id, username, text)
+
+
 def unlock(bot, update):
     get_data()
     name = update.message.from_user.full_name
@@ -137,8 +154,7 @@ def unlock(bot, update):
         if infrared == 0:
             sensor_ref.update({'infrared': 1})
             url = get_url()
-            bot.send_photo(chat_id=chat_id, photo=url,
-                           caption='*Place your finger at red circle*', parse_mode=parse_md)
+            bot.send_photo(chat_id=chat_id, photo=url, caption='*Place your finger at red circle*', parse_mode=parse_md)
             retry = 1
             while retry < 6:
                 sleep(2)
@@ -158,18 +174,16 @@ def unlock(bot, update):
                 retry += 1
                 sleep(3)
             if retry >= 6 and confirm == 0:
-                update.message.reply_text(
-                    x + ' *Confirmation Failed*\nPlease try again', parse_mode=parse_md)
+                update.message.reply_text(x + ' *Confirmation Failed*\nPlease try again', parse_mode=parse_md)
                 sensor_ref.update({'infrared': 0})
             else:
-                update.message.reply_text(unlocked + ' *Locker Unlocked*\n' + warning +
-                                          ' The lock will automatically locked approximately in *10 Seconds*', parse_mode=parse_md)
                 log_ref.set({
                     'name': name,
                     'date': '{}'.format(update.message.date),
                     'chat_id': chat_id,
                     'username': username
                 })
+                update.message.reply_text(unlocked + ' *Locker Unlocked*', parse_mode=parse_md)
         else:
             update.message.reply_text(
                 check + ' Already unlocked', parse_mode=parse_md)
