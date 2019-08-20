@@ -10,6 +10,12 @@ from time import sleep
 
 collection = firebase_cred.smart_lock_col
 
+
+def on_snapshot(doc_snapshot, changes, read_time):
+    for doc in doc_snapshot:
+        print(u'Received document snapshot: {}'.format(doc.id))
+
+
 PIN_IR = 25
 PIN_SERVO = Servo(14)
 
@@ -49,4 +55,4 @@ while True:
 							'servo': 0})
 		PIN_SERVO.min()
 		print("Locker is Locked")
-		sensor_ref.update({u'command' == u'locked'})
+		sensor_ref.update({u'command': u'locked'})
